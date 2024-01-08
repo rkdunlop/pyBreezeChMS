@@ -24,6 +24,7 @@ import json
 import combine_settings
 from enum import Enum
 from typing import Union, List, Mapping, Sequence, Set, Dict
+from ratelimit import limits, sleep_and_retry
 
 
 class ENDPOINTS(Enum):
@@ -179,6 +180,9 @@ class BreezeApi(object):
         # Raw profile fields description as returned by Breeze
         self.profile_fields: List[Mapping] = []
 
+    #Set Breeze API RATE LIMIT as defined https://support.breezechms.com/hc/en-us/articles/360001324153-API-Advanced-Custom-Development
+    @sleep_and_retry
+    @limits(calls=20, period =60)
     def _request(self,
                  endpoint: ENDPOINTS,
                  command: str = '',
