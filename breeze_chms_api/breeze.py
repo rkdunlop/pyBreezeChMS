@@ -122,7 +122,10 @@ def _transform_settings(args: Mapping) -> dict:
     :param args: Mapping of parameter:value
     :return: New dict with values suitably transformed
     """
-    return {k: _transform_setting(k, v) for k, v in args.items() if v}
+    if args:
+        return {k: _transform_setting(k, v) for k, v in args.items() if v}
+    else:
+        return {}
 
 
 def _check_illegal_param(args: Mapping, valid_keys: Set) -> None:

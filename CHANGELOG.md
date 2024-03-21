@@ -25,3 +25,6 @@ Much cleanup of unit tests.
 
 ## 1.4.1 18 Jan 2024
 Adding remove_form_entry() method.
+
+## 1.4.2 21 Mar 2024
+Issue #4: Fix exception in list_funds() with no parameter.

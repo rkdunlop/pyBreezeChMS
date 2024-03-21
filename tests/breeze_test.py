@@ -112,8 +112,8 @@ class BreezeApiTestCase(unittest.TestCase):
 
         eparams = dict(expect_params)
 
+        gotparams = dict(got_params)
         if eparams:
-            gotparams = dict(got_params)
             for ek, ev in expect_params.items():
                 gk = arg_alias.get(ek, ek)  # still needed?
                 gv = gotparams.get(gk)
@@ -131,9 +131,9 @@ class BreezeApiTestCase(unittest.TestCase):
                 del gotparams[gk]
                 del eparams[ek]
 
-            if gotparams:
-                # unexpected arguments
-                self.fail(f'Unexpected arguments in {url}: {gotparams}')
+        if gotparams:
+            # unexpected arguments
+            self.fail(f'Unexpected arguments in {url}: {gotparams}')
 
         if eparams:
             # Missing arguments
@@ -557,6 +557,22 @@ class BreezeApiTestCase(unittest.TestCase):
         self.assertEqual(ret, result)
         args['include_totals'] = '1'
         self.validate_url(ENDPOINTS.FUNDS, command='list', expect_params=args)
+
+    def test_list_funds_no_total(self):
+        # list_funds() breaks if no arguments!!!
+        ret = [
+            {
+                "something": "returned",
+                # Really, what's returned isn't important. We're just
+                # checking that the api call returns what the mock
+                # Breeze API query returns.
+            }
+        ]
+        self.make_api(ret)
+        result = self.breeze_api.list_funds()
+        self.assertEqual(ret, result)
+        self.validate_url(ENDPOINTS.FUNDS, command='list',
+                          expect_params={})
 
     def test_list_campaigns(self):
         ret = [{
